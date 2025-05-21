@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
+    id("io.realm.kotlin")
 }
 
 android {
@@ -53,6 +54,7 @@ dependencies {
     val koin_version = "4.0.4"
     val retrofit_version = "2.11.0"
     val okhttp_version = "4.12.0"
+    val realm_version = "3.0.0"
 
     // 🛠️ Android Core
     implementation("androidx.core:core-ktx:1.16.0")
@@ -64,10 +66,10 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version")
 
     // 🛠️ Jetpack Compose
-    implementation(platform("androidx.compose:compose-bom:2025.05.00"))
+    implementation(platform("androidx.compose:compose-bom:2025.05.01"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
-    implementation("androidx.compose.ui:ui-text:1.8.1")
+    implementation("androidx.compose.ui:ui-text:1.8.2")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
 
@@ -84,6 +86,9 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:$retrofit_version")
     implementation("com.squareup.okhttp3:okhttp:$okhttp_version")
     implementation("com.squareup.okhttp3:logging-interceptor:$okhttp_version")
+
+    // 🛠️ Realm
+    implementation("io.realm.kotlin:library-base:$realm_version")
 
     // 🛠️ Debugging
     debugImplementation("androidx.compose.ui:ui-tooling")

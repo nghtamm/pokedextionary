@@ -22,6 +22,7 @@ import com.nghtamm.pokedextionary.core.navigation.Screen
 import com.nghtamm.pokedextionary.core.theme.*
 import com.nghtamm.pokedextionary.features.onboarding.data.local.pagesData
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun OnboardingScreen(
@@ -44,6 +45,7 @@ fun OnboardingScreen(
         pageCount = { pagesData.size }
     )
     val coroutineScope = rememberCoroutineScope()
+    val onboardingViewModel: OnboardingViewModel = koinViewModel()
 
     Box(
         modifier = Modifier
@@ -89,6 +91,7 @@ fun OnboardingScreen(
                                 pagerState.animateScrollToPage(pagerState.currentPage + 1)
                             }
                         } else {
+                            onboardingViewModel.complete()
                             navController.navigate(Screen.Pokedex.route) {
                                 popUpTo(Screen.Onboarding.route) {
                                     inclusive = true
@@ -105,7 +108,10 @@ fun OnboardingScreen(
                         .width(120.dp)
                 ) {
                     Text(
-                        text = if (pagerState.currentPage < pagesData.size - 1) "Next" + "\t " + "→" else "Start",
+                        text = if (pagerState.currentPage < pagesData.size - 1)
+                            "Next" + "\t " + "→"
+                        else
+                            "Start",
                         style = MaterialTheme.typography.titleMedium.copy(
                             color = LightPrimary
                         ),
@@ -126,7 +132,10 @@ fun PagerIndicator(
         repeat(size) {
             val isSelected = it == current
             val width = animateDpAsState(
-                targetValue = if (isSelected) 30.dp else 10.dp
+                targetValue = if (isSelected)
+                    30.dp
+                else
+                    10.dp
             )
 
             Box(
@@ -136,7 +145,10 @@ fun PagerIndicator(
                     .width(width.value)
                     .clip(CircleShape)
                     .background(
-                        if (isSelected) DarkPrimary else DarkPrimary.copy(alpha = 0.5f)
+                        if (isSelected)
+                            DarkPrimary
+                        else
+                            DarkPrimary.copy(alpha = 0.5f)
                     )
             )
         }
