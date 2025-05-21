@@ -1,5 +1,6 @@
 package com.nghtamm.pokedextionary.core.network
 
+import com.nghtamm.pokedextionary.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -7,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
-    private const val BASE_URL = Endpoint.BASE_URL
+    private val BASE_URL = BuildConfig.BASE_URL
 
     private val logger = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY

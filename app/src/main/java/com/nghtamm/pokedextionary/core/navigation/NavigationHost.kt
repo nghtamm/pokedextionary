@@ -2,10 +2,9 @@ package com.nghtamm.pokedextionary.core.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
+import androidx.navigation.compose.*
 import com.nghtamm.pokedextionary.features.onboarding.presentation.OnboardingScreen
-import com.nghtamm.pokedextionary.features.pokedex.PokedexScreen
+import com.nghtamm.pokedextionary.features.pokedex.presentation.PokedexScreen
 
 @Composable
 fun NavigationHost(
@@ -17,11 +16,7 @@ fun NavigationHost(
         startDestination = startDestination
     ) {
         composable(Screen.Onboarding.route) {
-            OnboardingScreen(
-                onNext = {
-                    navController.navigate(Screen.Pokedex.route)
-                },
-            )
+            OnboardingScreen(navController = navController)
         }
         composable(Screen.Pokedex.route) {
             PokedexScreen()
