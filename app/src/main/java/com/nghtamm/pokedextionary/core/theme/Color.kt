@@ -4,7 +4,19 @@ import androidx.compose.ui.graphics.Color
 
 val DarkPrimary = Color(0xFF313131)
 val LightPrimary = Color(0xFFFAFAFA)
-val Primary = Color(0xFFFF746C)
+
+val PastelRed = Color(0xFFFF746C)
+val CoralRed = Color(0xFFFF645C)
+val PastelOrange = Color(0xFFFFC067)
+val PastelYellow = Color(0xFFFFEE8C)
+val PastelGreen = Color(0xFF80EF80)
+val MintGreen = Color(0xFF42D674)
+val PastelBlue = Color(0xFFB3EBF2)
+val SkyBlue = Color(0xFF77CBDA)
+val PastelPurple = Color(0xFFB39EB5)
+val MauvePurple = Color(0xFF8F7D91)
+val NeutralGray = Color(0xFFB5B5B5)
+val PlatinumGray = Color(0xFFD9D9D9)
 
 val Normal = Color(0xFFAAAA99)
 val Fire = Color(0xFFFF4422)

@@ -32,9 +32,9 @@ fun OnboardingScreen(
     SideEffect {
         window?.let {
             @Suppress("DEPRECATION")
-            it.statusBarColor = Primary.toArgb()
+            it.statusBarColor = PastelRed.toArgb()
             @Suppress("DEPRECATION")
-            it.navigationBarColor = Primary.toArgb()
+            it.navigationBarColor = PastelRed.toArgb()
 
             WindowCompat.getInsetsController(it, it.decorView)
                 .isAppearanceLightStatusBars = true
@@ -50,7 +50,7 @@ fun OnboardingScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Primary)
+            .background(PastelRed)
     ) {
         Image(
             painter = painterResource(id = R.drawable.pokeball),
