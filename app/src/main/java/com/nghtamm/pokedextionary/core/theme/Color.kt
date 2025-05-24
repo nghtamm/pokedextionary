@@ -2,9 +2,12 @@ package com.nghtamm.pokedextionary.core.theme
 
 import androidx.compose.ui.graphics.Color
 
+// ✏️ Basic
+val Transparent = Color.Transparent
 val DarkPrimary = Color(0xFF313131)
 val LightPrimary = Color(0xFFFAFAFA)
 
+// ✏️ Variants
 val PastelRed = Color(0xFFFF746C)
 val CoralRed = Color(0xFFFF645C)
 val PastelOrange = Color(0xFFFFC067)
@@ -18,6 +21,7 @@ val MauvePurple = Color(0xFF8F7D91)
 val NeutralGray = Color(0xFFB5B5B5)
 val PlatinumGray = Color(0xFFD9D9D9)
 
+// ✏️ Types
 val Normal = Color(0xFFAAAA99)
 val Fire = Color(0xFFFF4422)
 val Water = Color(0xFF3399FF)

@@ -20,7 +20,7 @@ import com.nghtamm.pokedextionary.shared.data.navigationItems
 fun HomeBottomSheet(
     onDismissRequest: () -> Unit,
     sheetState: SheetState,
-    navController: NavHostController
+    navController: NavHostController,
 ) {
     ModalBottomSheet(
         shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
@@ -29,7 +29,7 @@ fun HomeBottomSheet(
             Box(
                 modifier = Modifier
                     .padding(top = 16.dp, bottom = 8.dp)
-                    .width(80.dp)
+                    .width(60.dp)
                     .height(4.dp)
                     .background(
                         color = DarkPrimary.copy(alpha = 0.8f),
@@ -49,15 +49,16 @@ fun HomeBottomSheet(
         )
         Box(
             modifier = Modifier
-                .fillMaxWidth(0.5f)
+                .fillMaxWidth(0.4f)
                 .padding(vertical = 8.dp)
                 .height(4.dp)
                 .background(
-                    color = PastelRed,
+                    color = CoralRed,
                     shape = RoundedCornerShape(100)
                 )
                 .align(Alignment.CenterHorizontally)
         )
+
         navigationItems.forEachIndexed { index, item ->
             NavigationButton(
                 title = item.title,

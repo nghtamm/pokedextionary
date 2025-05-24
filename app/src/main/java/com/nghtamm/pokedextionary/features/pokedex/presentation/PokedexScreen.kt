@@ -1,11 +1,13 @@
 package com.nghtamm.pokedextionary.features.pokedex.presentation
 
 import androidx.activity.compose.LocalActivity
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavHostController
 import com.nghtamm.pokedextionary.core.theme.LightPrimary
@@ -35,6 +37,12 @@ fun PokedexScreen(
     var showBottomSheet by remember {
         mutableStateOf(false)
     }
+    val interactionSource = remember {
+        MutableInteractionSource()
+    }
+    var query by remember {
+        mutableStateOf("")
+    }
 
     Scaffold(
         containerColor = LightPrimary,
@@ -60,8 +68,13 @@ fun PokedexScreen(
         Column(
             modifier = Modifier.padding(padding)
         ) {
-            Text("Placeholder")
+            HomeSearchBar(
+                value = query,
+                onValueChange = { query = it },
+                placeholder = "What Pokémon are you looking for?",
+                interactionSource = interactionSource,
+                modifier = Modifier.padding(top = 4.dp)
+            )
         }
     }
 }
-
