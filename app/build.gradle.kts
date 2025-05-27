@@ -55,6 +55,7 @@ dependencies {
     val retrofit_version = "2.11.0"
     val okhttp_version = "4.12.0"
     val realm_version = "3.0.0"
+    val coil_version = "3.2.0"
 
     // 🛠️ Android Core
     implementation("androidx.core:core-ktx:1.16.0")
@@ -89,6 +90,10 @@ dependencies {
 
     // 🛠️ Realm
     implementation("io.realm.kotlin:library-base:$realm_version")
+
+    // 🛠️ Coil
+    implementation("io.coil-kt.coil3:coil-compose:$coil_version")
+    implementation("io.coil-kt.coil3:coil-network-okhttp:$coil_version")
 
     // 🛠️ Debugging
     debugImplementation("androidx.compose.ui:ui-tooling")
