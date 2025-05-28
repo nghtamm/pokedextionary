@@ -26,12 +26,17 @@ class PokedexViewModel(
                     async {
                         try {
                             val pokemon = repository
-                                .getPokemon(item.name)
+                                .getPokemon(
+                                    item.url
+                                        .trimEnd('/')
+                                        .split("/")
+                                        .last()
+                                )
                                 .getOrNull() ?: return@async null
 
                             PokemonList(
                                 id = pokemon.id.toString(),
-                                name = pokemon.name,
+                                name = item.name,
                                 sprite = pokemon.sprites.other.officialArtwork.frontDefault,
                                 types = pokemon.types.map {
                                     it.type.name

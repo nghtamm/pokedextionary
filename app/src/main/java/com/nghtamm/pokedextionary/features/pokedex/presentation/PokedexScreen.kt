@@ -162,7 +162,7 @@ fun PokemonCard(
                         .padding(horizontal = 18.dp, vertical = 10.dp)
                 ) {
                     Text(
-                        text = pokemon.name.replaceFirstChar { it.uppercase() },
+                        text = NameUtils.formatPokemonName(pokemon.name),
                         style = MaterialTheme.typography.headlineSmall.copy(
                             color = LightPrimary,
                             fontWeight = FontWeight.Bold
@@ -193,7 +193,9 @@ fun PokemonCard(
                                         modifier = Modifier.width(4.dp)
                                     )
                                     Text(
-                                        text = type.replaceFirstChar { it.uppercase() },
+                                        text = type.replaceFirstChar {
+                                            it.uppercase()
+                                        },
                                         style = MaterialTheme.typography.labelLarge.copy(
                                             color = LightPrimary
                                         ),
