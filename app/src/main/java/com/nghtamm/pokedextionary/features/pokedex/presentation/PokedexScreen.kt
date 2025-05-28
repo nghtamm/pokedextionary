@@ -20,7 +20,9 @@ import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.nghtamm.pokedextionary.R
-import com.nghtamm.pokedextionary.core.theme.*
+import com.nghtamm.pokedextionary.core.theme.LightPrimary
+import com.nghtamm.pokedextionary.core.utils.*
+import com.nghtamm.pokedextionary.features.pokedex.data.models.PokemonList
 import com.nghtamm.pokedextionary.shared.composable.*
 import org.koin.androidx.compose.koinViewModel
 
@@ -29,12 +31,6 @@ import org.koin.androidx.compose.koinViewModel
 fun PokedexScreen(
     navController: NavHostController
 ) {
-    val viewModel: PokedexViewModel = koinViewModel()
-    LaunchedEffect(Unit) {
-        viewModel.getPokemonList()
-    }
-    val state by viewModel.state.collectAsState()
-
     val window = (LocalActivity.current)?.window
     SideEffect {
         window?.let {
@@ -47,6 +43,12 @@ fun PokedexScreen(
                 .isAppearanceLightStatusBars = true
         }
     }
+
+    val viewModel: PokedexViewModel = koinViewModel()
+    LaunchedEffect(Unit) {
+        viewModel.getPokemonList()
+    }
+    val state by viewModel.state.collectAsState()
 
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
@@ -98,12 +100,13 @@ fun PokedexScreen(
                     modifier = Modifier.height(12.dp)
                 )
             }
-//            items(10) { index ->
-//                PokemonCard()
-//            }
             when (val result = state) {
                 is PokedexState.Loading -> {
-                    item { CircularProgressIndicator() }
+                    item {
+                        CircularProgressIndicator(
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
                 }
 
                 is PokedexState.Error -> {
@@ -111,20 +114,8 @@ fun PokedexScreen(
                 }
 
                 is PokedexState.Success -> {
-                    items(result.data.results.size) { index ->
-                        val pokemon = result.data.results[index]
-                        val id = pokemon.url.trimEnd('/').split("/").last() // ID từ URL
-                        val imageUrl =
-                            "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png"
-                        PokemonCard(
-                            name = pokemon.name,
-                            imageUrl = imageUrl,
-                            number = id.padStart(4, '0'),
-                            types = listOf(
-                                "Grass",
-                                "Poison"
-                            )
-                        )
+                    items(result.data.size) { index ->
+                        PokemonCard(pokemon = result.data[index])
                     }
                 }
             }
@@ -134,15 +125,14 @@ fun PokedexScreen(
 
 @Composable
 fun PokemonCard(
-    name: String,
-    imageUrl: String,
-    number: String,
-    types: List<String>
+    pokemon: PokemonList
 ) {
     Card(
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = GrassLight
+            containerColor = TypeUtils.getTypeStyle(
+                pokemon.types.first()
+            ).backgroundColor
         ),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 2.dp
@@ -172,7 +162,7 @@ fun PokemonCard(
                         .padding(horizontal = 18.dp, vertical = 10.dp)
                 ) {
                     Text(
-                        text = name.replaceFirstChar { it.uppercase() },
+                        text = pokemon.name.replaceFirstChar { it.uppercase() },
                         style = MaterialTheme.typography.headlineSmall.copy(
                             color = LightPrimary,
                             fontWeight = FontWeight.Bold
@@ -182,66 +172,41 @@ fun PokemonCard(
                         modifier = Modifier.height(4.dp)
                     )
                     Row {
-                        Card(
-                            shape = RoundedCornerShape(100),
-                            colors = CardDefaults.cardColors(
-                                containerColor = Grass
-                            ),
-                        ) {
-                            Row(
-                                horizontalArrangement = Arrangement.Center,
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        pokemon.types.forEach { type ->
+                            Card(
+                                shape = RoundedCornerShape(100),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = TypeUtils.getTypeStyle(type).color
+                                ),
                             ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.grass),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(12.dp)
-                                )
-                                Spacer(
-                                    modifier = Modifier.width(4.dp)
-                                )
-                                Text(
-                                    text = "Grass",
-                                    style = MaterialTheme.typography.labelLarge.copy(
-                                        color = LightPrimary
-                                    ),
-                                )
+                                Row(
+                                    horizontalArrangement = Arrangement.Center,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                                ) {
+                                    Image(
+                                        painter = painterResource(id = TypeUtils.getTypeStyle(type).icon),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(12.dp)
+                                    )
+                                    Spacer(
+                                        modifier = Modifier.width(4.dp)
+                                    )
+                                    Text(
+                                        text = type.replaceFirstChar { it.uppercase() },
+                                        style = MaterialTheme.typography.labelLarge.copy(
+                                            color = LightPrimary
+                                        ),
+                                    )
+                                }
                             }
-                        }
-                        Spacer(
-                            modifier = Modifier.width(6.dp)
-                        )
-                        Card(
-                            shape = RoundedCornerShape(100),
-                            colors = CardDefaults.cardColors(
-                                containerColor = Poison
-                            ),
-                        ) {
-                            Row(
-                                horizontalArrangement = Arrangement.Center,
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                            ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.poison),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(12.dp)
-                                )
-                                Spacer(
-                                    modifier = Modifier.width(4.dp)
-                                )
-                                Text(
-                                    text = "Poison",
-                                    style = MaterialTheme.typography.labelLarge.copy(
-                                        color = LightPrimary
-                                    ),
-                                )
-                            }
+                            Spacer(
+                                modifier = Modifier.width(6.dp)
+                            )
                         }
                     }
                     Text(
-                        text = "#$number",
+                        text = NumberUtils.formatPokemonNumber(pokemon.id),
                         style = MaterialTheme.typography.headlineLarge.copy(
                             color = LightPrimary.copy(alpha = 0.6f),
                             fontWeight = FontWeight.Black
@@ -250,7 +215,7 @@ fun PokemonCard(
                 }
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
-                        .data(imageUrl)
+                        .data(pokemon.sprite)
                         .build(),
                     contentDescription = null,
                     modifier = Modifier
