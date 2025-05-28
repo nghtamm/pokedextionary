@@ -4,8 +4,10 @@ import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.shape.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -24,6 +26,7 @@ import com.nghtamm.pokedextionary.core.theme.LightPrimary
 import com.nghtamm.pokedextionary.core.utils.*
 import com.nghtamm.pokedextionary.features.pokedex.data.models.PokemonList
 import com.nghtamm.pokedextionary.shared.composable.*
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @ExperimentalMaterial3Api
@@ -44,11 +47,11 @@ fun PokedexScreen(
         }
     }
 
-    val viewModel: PokedexViewModel = koinViewModel()
+    val pokedexViewModel: PokedexViewModel = koinViewModel()
     LaunchedEffect(Unit) {
-        viewModel.getPokemonList()
+        pokedexViewModel.getPokemonList()
     }
-    val state by viewModel.state.collectAsState()
+    val pokedexState by pokedexViewModel.state.collectAsState()
 
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
@@ -62,6 +65,13 @@ fun PokedexScreen(
     var query by remember {
         mutableStateOf("")
     }
+    val listState = rememberLazyListState()
+    val showFloatingActionButton by remember {
+        derivedStateOf {
+            listState.firstVisibleItemIndex > 0
+        }
+    }
+    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         containerColor = LightPrimary,
@@ -84,38 +94,72 @@ fun PokedexScreen(
             )
         }
 
-        LazyColumn(
-            contentPadding = padding,
-            modifier = Modifier.fillMaxSize()
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
         ) {
-            item {
-                HomeSearchBar(
-                    value = query,
-                    onValueChange = { query = it },
-                    placeholder = "What Pokémon are you looking for?",
-                    interactionSource = interactionSource,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
-                Spacer(
-                    modifier = Modifier.height(12.dp)
-                )
-            }
-            when (val result = state) {
-                is PokedexState.Loading -> {
-                    item {
-                        CircularProgressIndicator(
-                            modifier = Modifier.fillMaxSize()
-                        )
+            HomeSearchBar(
+                value = query,
+                onValueChange = { query = it },
+                placeholder = "What Pokémon are you looking for?",
+                interactionSource = interactionSource,
+                modifier = Modifier.padding(top = 4.dp, bottom = 10.dp)
+            )
+            Box {
+                LazyColumn(
+                    state = listState,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    when (val state = pokedexState) {
+                        is PokedexState.Loading -> {
+                            item {
+                                Box(
+                                    contentAlignment = Alignment.Center,
+                                    modifier = Modifier.fillMaxSize()
+                                ) {
+                                    CircularProgressIndicator()
+                                }
+                            }
+                        }
+
+                        is PokedexState.Error -> {
+                            item {
+                                Box(
+                                    contentAlignment = Alignment.Center,
+                                    modifier = Modifier.fillMaxSize()
+                                ) {
+                                    Text(text = state.message)
+                                }
+                            }
+                        }
+
+                        is PokedexState.Success -> {
+                            items(state.data.size) { index ->
+                                PokemonCard(pokemon = state.data[index])
+                            }
+                        }
                     }
                 }
 
-                is PokedexState.Error -> {
-                    item { Text(text = result.message, color = MaterialTheme.colorScheme.error) }
-                }
-
-                is PokedexState.Success -> {
-                    items(result.data.size) { index ->
-                        PokemonCard(pokemon = result.data[index])
+                if (showFloatingActionButton) {
+                    FloatingActionButton(
+                        onClick = {
+                            coroutineScope.launch {
+                                listState.animateScrollToItem(0)
+                            }
+                        },
+                        shape = CircleShape,
+                        containerColor = LightPrimary,
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(16.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.KeyboardArrowUp,
+                            contentDescription = null,
+                            modifier = Modifier.size(36.dp)
+                        )
                     }
                 }
             }
@@ -124,9 +168,7 @@ fun PokedexScreen(
 }
 
 @Composable
-fun PokemonCard(
-    pokemon: PokemonList
-) {
+fun PokemonCard(pokemon: PokemonList) {
     Card(
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(

@@ -15,7 +15,7 @@ class PokedexViewModel(
     val state: StateFlow<PokedexState> = _state
 
     fun getPokemonList(
-        limit: Int = 100000,
+        limit: Int = 50,
         offset: Int = 0
     ) {
         _state.value = PokedexState.Loading
@@ -44,7 +44,7 @@ class PokedexViewModel(
                             )
                         } catch (exception: Exception) {
                             Log.e(
-                                "POKEDEXVIEWMODEL",
+                                "Pokédex ViewModel",
                                 "Error fetching ${item.name}: ${exception.message}"
                             )
                             null
