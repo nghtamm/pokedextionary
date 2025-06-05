@@ -1,21 +1,40 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# ❌ Koin
+-keep class org.koin.** { *; }
+-dontwarn org.koin.**
+-keep class * extends androidx.lifecycle.ViewModel
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# ❌ Retrofit + GSON
+-keep class retrofit2.** { *; }
+-dontwarn retrofit2.**
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class com.google.gson.** { *; }
+-dontwarn com.google.gson.**
+-keepclassmembers class * {
+    @com.google.gson.annotations.SerializedName <fields>;
+}
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# ❌ OkHttp
+-dontwarn okhttp3.**
+-keep class okhttp3.** { *; }
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# ❌ Realm
+-keep class io.realm.kotlin.** { *; }
+-keep class io.realm.internal.** { *; }
+-dontwarn io.realm.kotlin.**
+
+# ❌ Coroutines
+-dontwarn kotlinx.coroutines.**
+-keep class kotlinx.coroutines.** { *; }
+
+# ❌ Coil
+-dontwarn coil3.**
+-keep class coil3.** { *; }
+-keep class com.squareup.okhttp3.internal.** { *; }
+
+# ❌ Jetpack Compose
+-keep class androidx.compose.** { *; }
+-dontwarn androidx.compose.**
+
+# ❌ General ViewModel & DI Safety
+-keep class com.nghtamm.pokedextionary.** { *; }

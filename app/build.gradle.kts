@@ -17,6 +17,15 @@ android {
         versionName = "1.0"
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file("pokedextionary-key.jks")
+            storePassword = "pokedextionary"
+            keyAlias = "pokedextionary-key"
+            keyPassword = "pokedextionary"
+        }
+    }
+
     buildTypes {
         debug {
             buildConfigField("String", "BASE_URL", "\"https://pokeapi.co/api/v2/\"")
@@ -29,6 +38,7 @@ android {
                 "proguard-rules.pro"
             )
             buildConfigField("String", "BASE_URL", "\"https://pokeapi.co/api/v2/\"")
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 
